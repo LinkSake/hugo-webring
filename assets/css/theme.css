@@ -1,0 +1,20 @@
+/* Theme variables. Override this file in your ring (assets/css/theme.css). */
+:root {
+  --webring-bg: #fbfaf7;
+  --webring-text: #1f1d1a;
+  --webring-text-muted: #6b665e;
+  --webring-accent: #8a4b2a;
+  --webring-border: #e3ded4;
+  --webring-font: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  --webring-width: 40rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --webring-bg: #171614;
+    --webring-text: #ece8e1;
+    --webring-text-muted: #a39d93;
+    --webring-accent: #e0a27c;
+    --webring-border: #34312c;
+  }
+}

@@ -1,0 +1,11 @@
+{{- /*
+  theme.css defines the variables and base.css uses them. A ring changes its look
+  by adding its own assets/css/theme.css, which overrides the module's.
+*/ -}}
+{{- $css := slice (resources.Get "css/theme.css") (resources.Get "css/base.css") | resources.Concat "css/webring.css" -}}
+{{- if hugo.IsProduction -}}
+  {{- $css = $css | minify | fingerprint -}}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}" crossorigin="anonymous">
+{{- else -}}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+{{- end -}}
