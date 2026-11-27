@@ -1,0 +1,24 @@
+# Test data. Covers the cases the module must handle:
+# - a member without the `active` field (counts as active)
+# - an inactive member in the middle of the list (skipped in the rotation)
+
+- slug: first
+  name: First site
+  url: https://first.example/
+  author: Person One
+  description: Always active.
+  active: true
+
+- slug: no-active-field
+  name: Site without the active field
+  url: https://no-active-field.example/
+
+- slug: inactive
+  name: Inactive site
+  url: https://inactive.example/
+  active: false
+
+- slug: last
+  name: Last site
+  url: https://last.example/
+  active: true

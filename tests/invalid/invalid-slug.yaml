@@ -1,0 +1,7 @@
+# expect: invalid slug "Has Spaces"
+- slug: Has Spaces
+  name: One
+  url: https://one.example/
+- slug: two
+  name: Two
+  url: https://two.example/
