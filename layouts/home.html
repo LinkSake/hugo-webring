@@ -1,10 +1,14 @@
 {{ define "main" }}
 {{- $members := partial "webring/active-members.html" (hugo.Data.members | default slice) -}}
+{{- partial "webring/members-json.html" $members -}}
 <header class="webring-header">
   <p class="webring-symbol" aria-hidden="true">{{ site.Params.webring.symbol }}</p>
   <h1>{{ site.Params.webring.name | default site.Title }}</h1>
   {{- with site.Params.webring.description }}
   <p>{{ . }}</p>
+  {{- end }}
+  {{- if $members }}
+  <p class="webring-random"><a href="{{ "random/" | relURL }}">{{ T "webring.random" }}</a></p>
   {{- end }}
 </header>
 
@@ -21,6 +25,11 @@
       {{- with .description }}
       <p>{{ . }}</p>
       {{- end }}
+      <details class="webring-widget">
+        <summary>{{ T "webring.widget" }}</summary>
+        <p>{{ T "webring.widgetHelp" }}</p>
+        <pre><code>{{ partial "webring/widget.html" . | string }}</code></pre>
+      </details>
     </li>
     {{- end }}
   </ol>
