@@ -11,10 +11,28 @@ configuration, its member list and, optionally, its theme.
 | `/` | Hub with the list of active members and how to join |
 | `/ring/<slug>/next/` | Redirects to the next active member |
 | `/ring/<slug>/previous/` | Redirects to the previous active member |
+| `/random/` | Redirects to a random active member; `?from=<slug>` skips that member |
+| `/members.json` | The ring's name, URL and active members, as JSON |
 
 The ring follows the order of `data/members.yaml` and wraps around. GitHub
 Pages has no server-side redirects, so each redirect is a static page with
 `meta refresh`, `location.replace()` and a fallback link.
+
+## The widget
+
+The hub shows each member their own widget, ready to copy. It is plain HTML
+with absolute URLs, so it works from any site:
+
+```html
+<nav class="webring" aria-label="My ring">
+  <a href="https://my-ring.example/ring/alamo-seco/previous/" rel="prev">←</a>
+  <a href="https://my-ring.example/">My ring</a>
+  <a href="https://my-ring.example/random/?from=alamo-seco">Random site</a>
+  <a href="https://my-ring.example/ring/alamo-seco/next/" rel="next">→</a>
+</nav>
+```
+
+It ships unstyled; each member styles `.webring` to fit their site.
 
 ## Using it in a ring
 
@@ -64,6 +82,9 @@ their widget never breaks.
   change.
 - **Hub text:** write `content/_index.md` in your ring; its content appears
   under the header.
+- **Hub layout:** if your ring overrides `layouts/home.html`, call
+  `{{ partial "webring/members-json.html" $members }}` in it, or `/members.json`
+  won't be published.
 
 ## Development
 
@@ -73,7 +94,7 @@ Tool versions live in [`.tool-versions`](.tool-versions) (for asdf or mise).
 # Local server with the example site
 hugo server --source exampleSite
 
-# Tests: example site redirects + invalid member lists
+# Tests: example site output + invalid member lists (needs jq)
 ./scripts/test.sh
 ```
 
