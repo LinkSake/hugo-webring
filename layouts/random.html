@@ -1,0 +1,33 @@
+{{- /*
+  /random/ sends the visitor to a random active member. With ?from=<slug>, it
+  skips that member, so the widget never sends someone back to the same site.
+*/ -}}
+{{- $targets := slice -}}
+{{- range partial "webring/active-members.html" (hugo.Data.members | default slice) -}}
+  {{- $targets = $targets | append (dict "slug" .slug "url" .url) -}}
+{{- end -}}
+{{- $ring := site.Params.webring.name | default site.Title -}}
+<!doctype html>
+<html lang="{{ site.Language.Locale }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ T "webring.random" }} · {{ $ring }}</title>
+  <script>
+    (function () {
+      var targets = {{ $targets }};
+      var from = new URLSearchParams(location.search).get("from");
+      var pool = targets.filter(function (t) { return t.slug !== from; });
+      if (pool.length === 0) pool = targets;
+      if (pool.length > 0) {
+        location.replace(pool[Math.floor(Math.random() * pool.length)].url);
+      }
+    })();
+  </script>
+</head>
+<body>
+  <noscript><p>{{ T "webring.randomNoScript" }}</p></noscript>
+  <p><a href="{{ site.Home.Permalink }}">{{ T "webring.backToHub" }}</a></p>
+</body>
+</html>

@@ -3,3 +3,8 @@ webring.members: Miembros
 webring.noMembers: Todavía no hay miembros.
 webring.join: Cómo unirte
 webring.joinLink: Lee los requisitos y abre un pull request en el repositorio del anillo.
+webring.random: Sitio al azar
+webring.randomNoScript: Para elegir un sitio al azar se necesita JavaScript.
+webring.backToHub: Volver al anillo
+webring.widget: Código del widget
+webring.widgetHelp: Pega este HTML en tu sitio para enlazarlo al anillo.

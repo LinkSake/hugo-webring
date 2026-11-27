@@ -3,3 +3,8 @@ webring.members: Members
 webring.noMembers: No members yet.
 webring.join: How to join
 webring.joinLink: Read the requirements and open a pull request in the ring's repository.
+webring.random: Random site
+webring.randomNoScript: Picking a random site needs JavaScript.
+webring.backToHub: Back to the ring
+webring.widget: Widget code
+webring.widgetHelp: Paste this HTML on your site to link into the ring.

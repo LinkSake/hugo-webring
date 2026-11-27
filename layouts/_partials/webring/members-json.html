@@ -1,0 +1,19 @@
+{{- /*
+  Publishes /members.json with the ring and its active members.
+  Receives the list of active members. Used by the member check action and
+  available to anyone who wants to build on the ring (for example, a JS widget).
+*/ -}}
+{{- $list := slice -}}
+{{- range . -}}
+  {{- $m := dict "slug" .slug "name" .name "url" .url -}}
+  {{- with .author }}{{ $m = merge $m (dict "author" .) }}{{ end -}}
+  {{- with .description }}{{ $m = merge $m (dict "description" .) }}{{ end -}}
+  {{- $list = $list | append $m -}}
+{{- end -}}
+{{- $data := dict
+  "name" (site.Params.webring.name | default site.Title)
+  "url" site.Home.Permalink
+  "members" $list
+-}}
+{{- $json := $data | jsonify (dict "indent" "  ") | resources.FromString "members.json" -}}
+{{- $json.Publish -}}

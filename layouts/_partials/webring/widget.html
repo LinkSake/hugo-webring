@@ -1,0 +1,11 @@
+{{- /*
+  The HTML a member pastes on their site. Receives one member (a map with `slug`).
+  Every URL is absolute, so the snippet works from any domain.
+*/ -}}
+{{- $ring := site.Params.webring.name | default site.Title -}}
+<nav class="webring" aria-label="{{ $ring }}">
+  <a href="{{ printf "ring/%s/previous/" .slug | absURL }}" rel="prev">←</a>
+  <a href="{{ site.Home.Permalink }}">{{ $ring }}</a>
+  <a href="{{ printf "random/?from=%s" .slug | absURL }}">{{ T "webring.random" }}</a>
+  <a href="{{ printf "ring/%s/next/" .slug | absURL }}" rel="next">→</a>
+</nav>
