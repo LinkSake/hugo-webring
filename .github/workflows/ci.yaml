@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install Hugo (version from .tool-versions)
+        run: |
+          version="$(awk '$1 == "hugo" { print $2 }' .tool-versions)"
+          archive="hugo_${version}_linux-amd64.tar.gz"
+          base="https://github.com/gohugoio/hugo/releases/download/v${version}"
+          cd "$RUNNER_TEMP"
+          curl -sSLO "$base/$archive"
+          curl -sSL "$base/hugo_${version}_checksums.txt" | grep " ${archive}\$" | sha256sum -c -
+          tar -xzf "$archive" hugo
+          sudo mv hugo /usr/local/bin/hugo
+          hugo version
+
+      - name: Tests
+        run: ./scripts/test.sh

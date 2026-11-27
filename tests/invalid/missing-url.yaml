@@ -1,0 +1,6 @@
+# expect: member #1 (one) has no url
+- slug: one
+  name: One
+- slug: two
+  name: Two
+  url: https://two.example/

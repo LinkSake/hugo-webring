@@ -1,0 +1,10 @@
+# The module's own configuration. Rings that import it define their own.
+
+[module]
+  # 0.158.0: hugo.Data, the locale key and .Language.Locale.
+  [module.hugoVersion]
+    min = "0.158.0"
+
+# Defaults. Each ring can override them in its own hugo.toml.
+[params.webring]
+  symbol = "○"

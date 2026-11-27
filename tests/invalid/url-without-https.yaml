@@ -1,0 +1,7 @@
+# expect: the url of "one" must start with https://
+- slug: one
+  name: One
+  url: http://one.example/
+- slug: two
+  name: Two
+  url: https://two.example/

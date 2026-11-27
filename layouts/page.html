@@ -1,0 +1,7 @@
+{{ define "main" }}
+<article>
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+</article>
+<p><a href="{{ site.Home.RelPermalink }}">← {{ site.Params.webring.name | default site.Title }}</a></p>
+{{ end }}

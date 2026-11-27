@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="{{ site.Language.Locale }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
+  {{- with site.Params.webring.description }}
+  <meta name="description" content="{{ . }}">
+  {{- end }}
+  {{ partial "webring/css.html" . }}
+</head>
+<body>
+  <main class="webring-content">
+    {{ block "main" . }}{{ end }}
+  </main>
+</body>
+</html>

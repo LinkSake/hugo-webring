@@ -1,0 +1,7 @@
+# expect: duplicate slug "one"
+- slug: one
+  name: One
+  url: https://one.example/
+- slug: one
+  name: Another one
+  url: https://another-one.example/

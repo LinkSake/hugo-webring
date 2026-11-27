@@ -1,0 +1,20 @@
+# Example site for developing and testing the module.
+# This is what a real ring's hugo.toml looks like, except for `replacements`.
+
+baseURL = "https://example.test/"
+title = "Example ring"
+locale = "en-US"
+defaultContentLanguage = "en"
+disableKinds = ["taxonomy", "term"]
+
+[module]
+  # Use the module from this same repo (path relative to themesDir).
+  # A real ring does not have this line.
+  replacements = "github.com/LinkSake/hugo-webring -> ../.."
+  [[module.imports]]
+    path = "github.com/LinkSake/hugo-webring"
+
+[params.webring]
+  name = "Example ring"
+  description = "Test site for the hugo-webring module."
+  repo = "https://github.com/LinkSake/hugo-webring"

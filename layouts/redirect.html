@@ -1,0 +1,20 @@
+{{- /*
+  The ring's redirect page. GitHub Pages has no server-side redirects, so this
+  uses meta refresh, location.replace() and a fallback link.
+  With no target (an inactive member), it redirects to the hub.
+*/ -}}
+{{- $target := .Params.target | default site.Home.Permalink -}}
+<!doctype html>
+<html lang="{{ site.Language.Locale }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex">
+  <meta http-equiv="refresh" content="0; url={{ $target }}">
+  <link rel="canonical" href="{{ $target }}">
+  <title>{{ site.Params.webring.name | default site.Title }}</title>
+  <script>location.replace({{ $target }});</script>
+</head>
+<body>
+  <p><a href="{{ $target }}">{{ T "webring.continue" }}</a></p>
+</body>
+</html>

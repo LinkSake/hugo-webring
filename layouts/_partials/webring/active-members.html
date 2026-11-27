@@ -1,0 +1,11 @@
+{{- /*
+  Receives the member list and returns only the active members, in the same order.
+  A member without an `active` field counts as active.
+*/ -}}
+{{- $active := slice -}}
+{{- range . -}}
+  {{- if ne .active false -}}
+    {{- $active = $active | append . -}}
+  {{- end -}}
+{{- end -}}
+{{- return $active -}}

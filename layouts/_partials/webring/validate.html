@@ -1,0 +1,28 @@
+{{- /*
+  Validates the member list. Receives the list (data/members.yaml).
+  Each problem is reported with errorf, so the build fails and shows every error.
+*/ -}}
+{{- $seen := slice -}}
+{{- range $i, $m := . -}}
+  {{- $pos := add $i 1 -}}
+  {{- if not $m.slug -}}
+    {{- errorf "hugo-webring: member #%d has no slug" $pos -}}
+  {{- else -}}
+    {{- if not (findRE `^[a-z0-9]+(-[a-z0-9]+)*$` $m.slug) -}}
+      {{- errorf "hugo-webring: invalid slug %q (use only a-z, 0-9 and hyphens)" $m.slug -}}
+    {{- end -}}
+    {{- if in $seen $m.slug -}}
+      {{- errorf "hugo-webring: duplicate slug %q" $m.slug -}}
+    {{- end -}}
+    {{- $seen = $seen | append $m.slug -}}
+  {{- end -}}
+  {{- if not $m.name -}}
+    {{- errorf "hugo-webring: member #%d (%s) has no name" $pos ($m.slug | default "no slug") -}}
+  {{- end -}}
+  {{- if not $m.url -}}
+    {{- errorf "hugo-webring: member #%d (%s) has no url" $pos ($m.slug | default "no slug") -}}
+  {{- else if not (hasPrefix $m.url "https://") -}}
+    {{- errorf "hugo-webring: the url of %q must start with https://" ($m.slug | default "no slug") -}}
+  {{- end -}}
+{{- end -}}
+{{- return true -}}

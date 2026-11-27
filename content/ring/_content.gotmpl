@@ -1,0 +1,54 @@
+{{- /*
+  Builds the ring's navigation pages from data/members.yaml:
+
+    /ring/<slug>/next/      →  redirects to the next active member
+    /ring/<slug>/previous/  →  redirects to the previous active member
+
+  The ring follows the order of the file and wraps around.
+  Members with `active: false` keep their URLs, but those redirect to the hub.
+
+  Note: when AddPage receives `build`, `render` must be set explicitly.
+  Without it the pages are silently not rendered.
+*/ -}}
+{{- $all := hugo.Data.members | default slice -}}
+{{- $_ := partial "webring/validate.html" $all -}}
+{{- $active := partial "webring/active-members.html" $all -}}
+{{- $n := len $active -}}
+
+{{- if lt $n 2 -}}
+  {{- warnf "hugo-webring: %d active member(s); a ring needs at least 2 to make sense" $n -}}
+{{- end -}}
+
+{{- range $i, $m := $active -}}
+  {{- $next := index $active (mod (add $i 1) $n) -}}
+  {{- $prev := index $active (mod (add $i (sub $n 1)) $n) -}}
+  {{- range slice (slice "next" $next) (slice "previous" $prev) -}}
+    {{- $direction := index . 0 -}}
+    {{- $target := index . 1 -}}
+    {{- $.AddPage (dict
+      "kind" "page"
+      "path" (printf "%s/%s" $m.slug $direction)
+      "title" (printf "%s: %s" $m.name $direction)
+      "layout" "redirect"
+      "sitemap" (dict "disable" true)
+      "build" (dict "list" "never" "render" "always")
+      "params" (dict "target" $target.url "origin" $m.slug)
+    ) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- range $m := $all -}}
+  {{- if eq $m.active false -}}
+    {{- range slice "next" "previous" -}}
+      {{- $.AddPage (dict
+        "kind" "page"
+        "path" (printf "%s/%s" $m.slug .)
+        "title" (printf "%s: %s" $m.name .)
+        "layout" "redirect"
+        "sitemap" (dict "disable" true)
+        "build" (dict "list" "never" "render" "always")
+        "params" (dict "origin" $m.slug)
+      ) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
