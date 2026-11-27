@@ -1,0 +1,48 @@
+name: hugo-webring member check
+description: >-
+  Checks that every active member of a hugo-webring ring is online and shows the
+  ring's widget, and keeps one GitHub issue with the results.
+
+inputs:
+  ring-url:
+    description: The ring's public URL, for example https://my-ring.example/
+    required: true
+  manage-issue:
+    description: Open, update or close an issue with the results ("true" or "false").
+    required: false
+    default: "true"
+  issue-label:
+    description: Label of the issue that holds the results.
+    required: false
+    default: webring-check
+  github-token:
+    description: Token used to manage the issue. Needs issues write permission.
+    required: false
+    default: ${{ github.token }}
+
+outputs:
+  problems:
+    description: Number of active members with problems.
+    value: ${{ steps.check.outputs.problems }}
+
+runs:
+  using: composite
+  steps:
+    - id: check
+      name: Check members
+      shell: bash
+      env:
+        RING_URL: ${{ inputs.ring-url }}
+      run: |
+        "$GITHUB_ACTION_PATH/check.sh" "$RING_URL" "$RUNNER_TEMP/webring-check.md"
+        cat "$RUNNER_TEMP/webring-check.md" >>"$GITHUB_STEP_SUMMARY"
+
+    - name: Update the results issue
+      if: inputs.manage-issue == 'true'
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        REPORT: ${{ runner.temp }}/webring-check.md
+        PROBLEMS: ${{ steps.check.outputs.problems }}
+        LABEL: ${{ inputs.issue-label }}
+      run: '"$GITHUB_ACTION_PATH/issue.sh"'
