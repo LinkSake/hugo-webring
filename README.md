@@ -102,3 +102,54 @@ hugo server --source exampleSite
 `module.replacements`. Each file in `tests/invalid/` is a member list that must
 break the build; its first line (`# expect: ...`) is the error message the test
 looks for.
+
+## Weekly member check
+
+This repo also ships a GitHub Action that checks every active member of a ring:
+their site must respond with a 2xx status and link into the ring (the widget
+must be there). It reads the ring's `/members.json`, so the ring must be
+deployed with a version of this module that publishes it.
+
+The action keeps one issue with the results: it opens it when there are
+problems, updates it on each run while they last, and closes it when every
+member passes. The run's summary shows the same report.
+
+Add this workflow to your ring as `.github/workflows/check-members.yaml`:
+
+```yaml
+name: Member check
+
+on:
+  schedule:
+    - cron: "17 15 * * 1" # Mondays, 15:17 UTC
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: LinkSake/hugo-webring/.github/actions/check-members@v1.0.0
+        with:
+          ring-url: https://my-ring.example/
+```
+
+| Input | Default | What it does |
+| --- | --- | --- |
+| `ring-url` | (required) | The ring's public URL |
+| `manage-issue` | `true` | Open, update or close the results issue |
+| `issue-label` | `webring-check` | Label of the results issue |
+| `github-token` | `github.token` | Token used to manage the issue |
+
+The action's `problems` output has the number of members with problems.
+
+The check doesn't remove anyone. When a site keeps failing, set
+`active: false` for it in `data/members.yaml`.
+
+To run the action's tests locally (needs `python3`, `curl` and `jq`):
+
+```sh
+./scripts/test-check-members.sh
+```
